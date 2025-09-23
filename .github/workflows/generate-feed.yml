@@ -31,7 +31,7 @@ jobs:
           import urllib.parse
 
           # --- 1. Konfigurasi Awal ---
-          SPINTEXT = ['Best', 'Easy', 'Delicious', 'Amazing', 'Flavorful', 'Simple Ideas', 'Yummy', 'Secret', 'Insanely', 'Viral', 'Effortless', 'Ultimate', 'Quick', 'Decadent', 'Effortless', 'Mind-blowing', 'Unbelievable', 'Foolproof', 'Revolutionary', 'Addictive', 'Legendary', 'Heavenly', 'Surprising', 'Simple', 'Incredible', 'Perfect', 'Irresistible']
+          SPINTEXT = [''Promo Yamaha Madiun', 'Promo Yamaha Ngawi', 'Promo Yamaha Caruban', 'Dealer Yamaha Madiun', 'Promo Yamaha Magetan', 'Dealer Yamaha Ngawi', 'Dealer Yamaha Caruban', 'Dealer Yamaha Magetan', 'Yamaha Motor Ngawi', 'Yamaha Motor Madiun', 'Yamaha Motor Magetan', 'Yamaha Motor Caruban', 'Dealer Yamaha Motor Ngawi', 'Dealer Yamaha Motor Madiun', 'Dealer Yamaha Motor Caruban', 'Dealer Yamaha Motor Magetan', 'Harga Motor Yamaha Ngawi', 'Harga Motor Yamaha Madiun', 'Harga Motor Yamaha Magetan', 'Harga Motor Yamaha Caruban', 'Yamaha SBR Ngawi', 'Yamaha SBR Madiun', 'Yamaha SBR Magetan', 'Yamaha SBR Caruban', 'Brosur Kredit Motor Yamaha Ngawi', 'Brosur Kredit Motor Yamaha Madiun', 'Brosur Kredit Motor Yamaha Caruban', 'Brosur Kredit Motor Yamaha Magetan']
           GITHUB_USERNAME = "${{ github.repository_owner }}"
           GITHUB_REPO_NAME = "${{ github.event.repository.name }}"
           

@@ -1,0 +1,109 @@
+name: Generate Pinterest RSS Feed
+
+on:
+  schedule:
+    - cron: '0 1 * * *' # Menjalankan sekali setiap hari jam 1 pagi (UTC)
+  workflow_dispatch: # Tombol untuk menjalankan manual
+
+jobs:
+  build-feed:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Generate feed.xml
+        shell: python
+        run: |
+          import os
+          import random
+          import html
+          from datetime import datetime, timezone
+          from xml.etree.ElementTree import Element, SubElement, tostring
+          from xml.dom import minidom
+          import urllib.parse
+
+          # --- 1. Konfigurasi Awal ---
+          SPINTEXT = ['Promo Yamaha Madiun', 'Promo Yamaha Ngawi', 'Promo Yamaha Caruban', 'Dealer Yamaha Madiun', 'Promo Yamaha Magetan', 'Dealer Yamaha Ngawi', 'Dealer Yamaha Caruban', 'Dealer Yamaha Magetan', 'Yamaha Motor Ngawi', 'Yamaha Motor Madiun', 'Yamaha Motor Magetan', 'Yamaha Motor Caruban', 'Dealer Yamaha Motor Ngawi', 'Dealer Yamaha Motor Madiun', 'Dealer Yamaha Motor Caruban', 'Dealer Yamaha Motor Magetan', 'Harga Motor Yamaha Ngawi', 'Harga Motor Yamaha Madiun', 'Harga Motor Yamaha Magetan', 'Harga Motor Yamaha Caruban', 'Yamaha SBR Ngawi', 'Yamaha SBR Madiun', 'Yamaha SBR Magetan', 'Yamaha SBR Caruban', 'Brosur Kredit Motor Yamaha Ngawi', 'Brosur Kredit Motor Yamaha Madiun', 'Brosur Kredit Motor Yamaha Caruban', 'Brosur Kredit Motor Yamaha Magetan']
+          GITHUB_USERNAME = "${{ github.repository_owner }}"
+          GITHUB_REPO_NAME = "${{ github.event.repository.name }}"
+          
+          # --- 2. Baca Semua File Konten ---
+          try:
+              with open('domain.txt', 'r') as f:
+                  domain = f.read().strip()
+              with open('keyword.txt', 'r') as f:
+                  keywords = [line.strip() for line in f if line.strip()]
+              with open('deskripsi.txt', 'r', encoding='utf-8') as f:
+                  descriptions_templates = [desc.strip() for desc in f.read().split('---') if desc.strip()]
+          except FileNotFoundError as e:
+              print(f"❌ Error: File {e.filename} tidak ditemukan.")
+              exit(1)
+
+          # --- 3. Buat Struktur Dasar RSS Feed ---
+          rss = Element('rss', version='2.0')
+          channel = SubElement(rss, 'channel')
+          SubElement(channel, 'title').text = f'Recipe Ideas from {domain}'
+          SubElement(channel, 'link').text = f"https://{GITHUB_USERNAME}.github.io/{GITHUB_REPO_NAME}"
+          SubElement(channel, 'description').text = 'A collection of delicious recipe ideas.'
+          SubElement(channel, 'pubDate').text = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
+
+          # --- 4. Loop untuk Membuat 3 Item Artikel ---
+          random.shuffle(keywords)
+          print(f"📝 Menghasilkan 3 item untuk feed...")
+
+          for keyword in keywords[:3]:
+              random_prefix = random.choice(SPINTEXT)
+              title = f"{random_prefix} {keyword.title()}"
+              
+              # ===== PERUBAHAN DI SINI =====
+              # 1. Pilih template deskripsi secara acak
+              description_template = random.choice(descriptions_templates)
+              # 2. Ganti placeholder %keyword% dengan keyword yang sebenarnya
+              description_text = description_template.replace('%keyword%', keyword.title())
+              
+              url_keyword = keyword.replace(' ', '-').lower()
+              link = f"https://wa.me/6289657404440"
+              encoded_keyword = urllib.parse.quote(keyword)
+              image_url = f"https://tse1.mm.bing.net/th?q={encoded_keyword}&w=800&h=1200&c=7&rs=1&p=0"
+              
+              item = SubElement(channel, 'item')
+              SubElement(item, 'title').text = title
+              SubElement(item, 'link').text = link
+              SubElement(item, 'description').text = description_text
+              SubElement(item, 'pubDate').text = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
+              
+              SubElement(item, 'enclosure', {
+                  'url': image_url,
+                  'type': 'image/jpeg'
+              })
+
+          # --- 5. Tulis ke File feed.xml ---
+          xml_str = tostring(rss, encoding='unicode')
+          dom = minidom.parseString(xml_str)
+          pretty_xml_str = dom.toprettyxml(indent="  ")
+          final_xml_output = pretty_xml_str.lstrip()
+          
+          with open('feed.xml', 'w', encoding='utf-8') as f:
+              f.write(final_xml_output)
+          
+          print("✅ File feed.xml berhasil dibuat dengan deskripsi dinamis.")
+
+      - name: Commit and Push feed.xml
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add feed.xml
+          if git diff --staged --quiet; then
+            echo "✅ Feed tidak berubah. Tidak ada yang di-commit."
+          else
+            git commit -m "chore: Update RSS feed with dynamic descriptions"
+            git push
+          fi

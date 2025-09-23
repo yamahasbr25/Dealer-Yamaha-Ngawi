@@ -55,11 +55,11 @@ jobs:
           SubElement(channel, 'description').text = 'A collection of delicious recipe ideas.'
           SubElement(channel, 'pubDate').text = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
 
-          # --- 4. Loop untuk Membuat 50 Item Artikel ---
+          # --- 4. Loop untuk Membuat 3 Item Artikel ---
           random.shuffle(keywords)
-          print(f"📝 Menghasilkan 50 item untuk feed...")
+          print(f"📝 Menghasilkan 3 item untuk feed...")
 
-          for keyword in keywords[:50]:
+          for keyword in keywords[:3]:
               random_prefix = random.choice(SPINTEXT)
               title = f"{random_prefix} {keyword.title()}"
               

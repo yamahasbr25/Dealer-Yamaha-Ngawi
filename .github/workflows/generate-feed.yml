@@ -72,7 +72,7 @@ jobs:
               url_keyword = keyword.replace(' ', '-').lower()
               link = f"https://{domain}/detail.html?q={url_keyword}"
               encoded_keyword = urllib.parse.quote(keyword)
-              image_url = f"https://tse1.mm.bing.net/th?q={encoded_keyword}&w=800&h=1200&c=7&rs=1&p=0"
+              image_url = f"https://tse1.mm.bing.net/th?q={encoded_keyword}"
               
               item = SubElement(channel, 'item')
               SubElement(item, 'title').text = title

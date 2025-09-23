@@ -1,2 +1,3 @@
-# Dealer-Yamaha-Ngawi
-Dealer Yamaha Motor Ngawi
+#NOTE
+
+.github/workflows/generate-feed.yml

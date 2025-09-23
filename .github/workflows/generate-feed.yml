@@ -31,7 +31,7 @@ jobs:
           import urllib.parse
 
           # --- 1. Konfigurasi Awal ---
-          SPINTEXT = ['Promo Yamaha Madiun', 'Promo Yamaha Ngawi', 'Promo Yamaha Caruban', 'Dealer Yamaha Madiun', 'Promo Yamaha Magetan', 'Dealer Yamaha Ngawi', 'Dealer Yamaha Caruban', 'Dealer Yamaha Magetan', 'Yamaha Motor Ngawi', 'Yamaha Motor Madiun', 'Yamaha Motor Magetan', 'Yamaha Motor Caruban', 'Dealer Yamaha Motor Ngawi', 'Dealer Yamaha Motor Madiun', 'Dealer Yamaha Motor Caruban', 'Dealer Yamaha Motor Magetan', 'Harga Motor Yamaha Ngawi', 'Harga Motor Yamaha Madiun', 'Harga Motor Yamaha Magetan', 'Harga Motor Yamaha Caruban', 'Yamaha SBR Ngawi', 'Yamaha SBR Madiun', 'Yamaha SBR Magetan', 'Yamaha SBR Caruban', 'Brosur Kredit Motor Yamaha Ngawi', 'Brosur Kredit Motor Yamaha Madiun', 'Brosur Kredit Motor Yamaha Caruban', 'Brosur Kredit Motor Yamaha Magetan']
+          SPINTEXT = ['Best', 'Easy', 'Delicious', 'Amazing', 'Flavorful', 'Simple Ideas', 'Yummy', 'Secret', 'Insanely', 'Viral', 'Effortless', 'Ultimate', 'Quick', 'Decadent', 'Effortless', 'Mind-blowing', 'Unbelievable', 'Foolproof', 'Revolutionary', 'Addictive', 'Legendary', 'Heavenly', 'Surprising', 'Simple', 'Incredible', 'Perfect', 'Irresistible']
           GITHUB_USERNAME = "${{ github.repository_owner }}"
           GITHUB_REPO_NAME = "${{ github.event.repository.name }}"
           
@@ -55,11 +55,11 @@ jobs:
           SubElement(channel, 'description').text = 'A collection of delicious recipe ideas.'
           SubElement(channel, 'pubDate').text = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
 
-          # --- 4. Loop untuk Membuat 3 Item Artikel ---
+          # --- 4. Loop untuk Membuat 50 Item Artikel ---
           random.shuffle(keywords)
-          print(f"📝 Menghasilkan 3 item untuk feed...")
+          print(f"📝 Menghasilkan 50 item untuk feed...")
 
-          for keyword in keywords[:3]:
+          for keyword in keywords[:50]:
               random_prefix = random.choice(SPINTEXT)
               title = f"{random_prefix} {keyword.title()}"
               
@@ -70,7 +70,7 @@ jobs:
               description_text = description_template.replace('%keyword%', keyword.title())
               
               url_keyword = keyword.replace(' ', '-').lower()
-              link = f"https://wa.me/6289657404440"
+              link = f"https://{domain}/detail.html?q={url_keyword}"
               encoded_keyword = urllib.parse.quote(keyword)
               image_url = f"https://tse1.mm.bing.net/th?q={encoded_keyword}&w=800&h=1200&c=7&rs=1&p=0"
               

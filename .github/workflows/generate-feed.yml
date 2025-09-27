@@ -61,7 +61,7 @@ jobs:
 
           for keyword in keywords[:3]:
               random_prefix = random.choice(SPINTEXT)
-              title = f"{random_prefix} {keyword.title()}"
+              title = f"{random_prefix} {keyword.title()} WA 089657404440"
               
               # ===== PERUBAHAN DI SINI =====
               # 1. Pilih template deskripsi secara acak
